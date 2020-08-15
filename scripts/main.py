@@ -16,7 +16,7 @@ def getLine(min , max , a , b):
     return a , b
 
 
-df = pd.read_csv(("data/house_data.csv") , nrows=50)
+df = pd.read_csv(("data/house_data.csv") , nrows=200)
 
 #convert it to square meters
 spaceDf = df["sqft_living"].apply( lambda x : x / 10.764).apply( lambda x : np.round(x , 1))
@@ -48,8 +48,9 @@ def gradient_descent(X , Y , theta , alpha):
     N = len(X)
     normalization = alpha/float(N)
     for i in range(N):
-        a_deriv = point_error(X[i] , Y[i] , theta[0] , theta[1] )
-        b_deriv = point_error(X[i] , Y[i] , theta[0] , theta[1] )*X[i]
+        err = point_error(X[i] , Y[i] , theta[0] , theta[1] )
+        a_deriv = err
+        b_deriv = err*X[i]
 
     theta[0] = theta[0] - normalization*a_deriv
     theta[1] = theta[1] - normalization*b_deriv
