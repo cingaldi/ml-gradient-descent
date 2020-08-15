@@ -11,7 +11,7 @@ def normalizeDataframeColumn(column):
     return (column - column.min()) / (column.max() - column.min())
 
 def getLine(min , max , a , b):
-    x = np.linspace(min , max , 100)
+    x = np.linspace(min , max , 10)
     y = a + b*x
     return a , b
 
@@ -41,44 +41,43 @@ def cost (X , Y , a , b):
     return cost
 
 
-def gradient_descent(X , Y , a , b , alpha):
+def gradient_descent(X , Y , theta , alpha):
     a_deriv = 0
     b_deriv = 0
 
     N = len(X)
     normalization = alpha/float(N)
     for i in range(N):
-        a_deriv = point_error(X[i] , Y[i] , a , b )
-        b_deriv = point_error(X[i] , Y[i] , a , b )*X[i]
+        a_deriv = point_error(X[i] , Y[i] , theta[0] , theta[1] )
+        b_deriv = point_error(X[i] , Y[i] , theta[0] , theta[1] )*X[i]
 
-    a = a - normalization*a_deriv
-    b = b - normalization*b_deriv
-    return a , b
+    theta[0] = theta[0] - normalization*a_deriv
+    theta[1] = theta[1] - normalization*b_deriv
+
+    return theta
 
 
 
 @timed
 def main ():
-    a = a0
-    b = b0
+    theta = [a0 , b0]
     J = []
     iterations = 0
     last_J = 0
-
     while True:
-        print(iterations , a , b , last_J)
+        print(iterations , theta[0] , theta[1] , last_J)
 
-        a , b = gradient_descent(yearDf , priceDf , a , b , alpha)
+        theta = gradient_descent(yearDf , priceDf , theta  , alpha)
         iterations += 1
 
-        last_J = cost(yearDf , priceDf , a , b)
+        last_J = cost(yearDf , priceDf , theta[0] , theta[1])
         J.append(last_J)
 
         if np.isclose(last_J , 0 , atol=1e-04) or iterations == max_iterations:
             break
 
 
-    print("a={} , b={} with a0={} , b0={} , alpha={} in {} iterations".format(a , b , a0 , b0 , alpha , iterations))
+    print("a={} , b={} with a0={} , b0={} , alpha={} in {} iterations".format(theta[0] , theta[1] , a0 , b0 , alpha , iterations))
 
     return J
 
