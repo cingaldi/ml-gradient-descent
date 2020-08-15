@@ -16,7 +16,7 @@ def getLine(min , max , a , b):
     return a , b
 
 
-df = pd.read_csv(("data/house_data.csv") , nrows=200)
+df = pd.read_csv(("data/house_data.csv"))
 
 #convert it to square meters
 spaceDf = df["sqft_living"].apply( lambda x : x / 10.764).apply( lambda x : np.round(x , 1))
@@ -49,8 +49,8 @@ def gradient_descent(X , Y , theta , alpha):
     normalization = alpha/float(N)
     for i in range(N):
         err = point_error(X[i] , Y[i] , theta[0] , theta[1] )
-        a_deriv = err
-        b_deriv = err*X[i]
+        a_deriv += err
+        b_deriv += err*X[i]
 
     theta[0] = theta[0] - normalization*a_deriv
     theta[1] = theta[1] - normalization*b_deriv
@@ -67,26 +67,25 @@ def onEnd(iterations , theta):
 @timed
 def main (progressCallback , endCallback):
     theta = [a0 , b0]
-    J = []
+    J = [0]
     iterations = 0
-    last_J = 0
     while True:
 
-        progressCallback(iterations , last_J)
+        progressCallback(iterations , J[iterations])
 
         theta = gradient_descent(yearDf , priceDf , theta  , alpha)
         iterations += 1
 
-        last_J = cost(yearDf , priceDf , theta[0] , theta[1])
-        J.append(last_J)
+        new_J = cost(yearDf , priceDf , theta[0] , theta[1])
+        J.append(new_J)
 
-        if np.isclose(last_J , 0 , atol=1e-04) or iterations == max_iterations:
+        if np.isclose(abs(J[iterations-1]  - new_J), 0 , atol=1e-04) or iterations == max_iterations:
             break
 
 
     endCallback(iterations , theta)
 
-    return J
+    return J[1:]
 
 
 J = main(onProgress , onEnd)
