@@ -10,7 +10,7 @@ At the end of the run, a plot is shown to illustrates how cost decreases through
 
 <img src=https://github.com/cingaldi/ml-gradient-descent/blob/master/docs/cost_vs_iterations.png width="50%" height="50%"/>
 
-# Next Step
+# Next Steps
 
 * Optimize algorithm execution to achieve acceptable execution time
 * Improve code quality in order to swap algs and visualizations easily and make further experimentations
