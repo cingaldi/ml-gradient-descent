@@ -59,9 +59,12 @@ def gradient_descent(X , Y , theta , alpha):
 def onProgress(iterations , cost):
     print("[{}/{}] => cost={}".format(iterations+1 , max_iterations , cost))
 
+def onEnd(iterations , theta):
+        print("a={} , b={} with a0={} , b0={} , alpha={} in {} iterations".format(theta[0] , theta[1] , a0 , b0 , alpha , iterations))
+
 
 @timed
-def main (progressCallback):
+def main (progressCallback , endCallback):
     theta = [a0 , b0]
     J = []
     iterations = 0
@@ -80,12 +83,12 @@ def main (progressCallback):
             break
 
 
-    print("a={} , b={} with a0={} , b0={} , alpha={} in {} iterations".format(theta[0] , theta[1] , a0 , b0 , alpha , iterations))
+    endCallback(iterations , theta)
 
     return J
 
 
-J = main(onProgress)
+J = main(onProgress , onEnd)
 
 plt.plot(J , "b.")
 plt.show()
