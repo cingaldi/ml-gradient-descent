@@ -4,6 +4,8 @@ import sys
 
 import matplotlib.pyplot as plt
 
+from perf import timed
+
 
 def normalizeDataframeColumn(column):
     return (column - column.min()) / (column.max() - column.min())
@@ -14,7 +16,7 @@ def getLine(min , max , a , b):
     return a , b
 
 
-df = pd.read_csv(("data/house_data.csv") , nrows=100)
+df = pd.read_csv(("data/house_data.csv") , nrows=50)
 
 #convert it to square meters
 spaceDf = df["sqft_living"].apply( lambda x : x / 10.764).apply( lambda x : np.round(x , 1))
@@ -54,30 +56,37 @@ def gradient_descent(X , Y , a , b , alpha):
     return a , b
 
 
-a = a0
-b = b0
-J = []
-iterations = 0
-last_J = 0
-while True:
-    print(iterations , a , b , last_J)
 
-    a , b = gradient_descent(yearDf , priceDf , a , b , alpha)
-    iterations += 1
+@timed
+def main ():
+    a = a0
+    b = b0
+    J = []
+    iterations = 0
+    last_J = 0
 
-    last_J = cost(yearDf , priceDf , a , b)
-    J.append(last_J)
+    while True:
+        print(iterations , a , b , last_J)
 
-    if np.isclose(last_J , 0 , atol=1e-04) or iterations == max_iterations:
-        break
+        a , b = gradient_descent(yearDf , priceDf , a , b , alpha)
+        iterations += 1
 
+        last_J = cost(yearDf , priceDf , a , b)
+        J.append(last_J)
+
+        if np.isclose(last_J , 0 , atol=1e-04) or iterations == max_iterations:
+            break
+
+
+    print("a={} , b={} with a0={} , b0={} , alpha={} in {} iterations".format(a , b , a0 , b0 , alpha , iterations))
+
+    return J
+
+
+J = main()
 
 plt.plot(J , "b.")
 plt.show()
-
-print("a={} , b={} with a0={} , b0={} , alpha={} in {} iterations".format(a , b , a0 , b0 , alpha , iterations))
-
-
 
 try:
     quit()
