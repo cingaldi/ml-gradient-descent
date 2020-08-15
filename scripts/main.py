@@ -27,7 +27,7 @@ priceDf = normalizeDataframeColumn(df["price"])
 
 a0 = 0.5
 b0 = 1
-alpha = 0.2
+alpha = 0.01
 max_iterations = 2000
 
 def point_error (x , y , a , b):
@@ -57,8 +57,10 @@ def gradient_descent(X , Y , theta , alpha):
 
     return theta
 
+J = []
 def onProgress(iterations , cost):
-    print("[{}/{}] => cost={}".format(iterations+1 , max_iterations , cost))
+    J.append(cost)
+    print("[{}/{}] => cost={}".format(iterations , max_iterations , cost))
 
 def onEnd(iterations , theta):
         print("a={} , b={} with a0={} , b0={} , alpha={} in {} iterations".format(theta[0] , theta[1] , a0 , b0 , alpha , iterations))
@@ -67,28 +69,28 @@ def onEnd(iterations , theta):
 @timed
 def main (progressCallback , endCallback):
     theta = [a0 , b0]
-    J = [0]
+    last_J = 0
     iterations = 0
     while True:
 
-        progressCallback(iterations , J[iterations])
 
         theta = gradient_descent(yearDf , priceDf , theta  , alpha)
         iterations += 1
 
         new_J = cost(yearDf , priceDf , theta[0] , theta[1])
-        J.append(new_J)
 
-        if np.isclose(abs(J[iterations-1]  - new_J), 0 , atol=1e-04) or iterations == max_iterations:
+        if np.isclose(abs(last_J  - new_J), 0 , atol=1e-03) or iterations == max_iterations:
             break
+
+        progressCallback(iterations , new_J)
+
+        last_J = new_J
 
 
     endCallback(iterations , theta)
 
-    return J[1:]
 
-
-J = main(onProgress , onEnd)
+main(onProgress , onEnd)
 
 plt.plot(J , "b.")
 plt.show()
