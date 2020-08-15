@@ -65,7 +65,7 @@ def main ():
     iterations = 0
     last_J = 0
     while True:
-        print(iterations , theta[0] , theta[1] , last_J)
+        print("[{}/{}] => cost={}".format(iterations+1 , max_iterations , last_J))
 
         theta = gradient_descent(yearDf , priceDf , theta  , alpha)
         iterations += 1
