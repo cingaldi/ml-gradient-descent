@@ -8,7 +8,7 @@ a linear regression model based on a very simple dataset
 At the end of the run, a plot is shown to illustrates how cost decreases through iterations until it converges to zero. Tweaking with parameters
 (learning rate, initial conditions) yields new shapes of the curve and help to undersand what impact performance
 
-
+<img src=https://github.com/cingaldi/ml-gradient-descent/blob/master/docs/cost_vs_iterations.png width="50%" height="50%"/>
 
 # Next Step
 
