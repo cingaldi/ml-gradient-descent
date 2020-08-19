@@ -45,12 +45,12 @@ def gradient_descent(X , Y , theta , alpha):
     a_deriv = 0
     b_deriv = 0
 
-    N = len(X)
-    normalization = alpha/float(N)
-    for i in range(N):
-        err = point_error(X[i] , Y[i] , theta[0] , theta[1] )
+    examples = len(X[0])
+    normalization = alpha/float(examples)
+    for i in range(examples):
+        err = point_error(X[0][i] , Y[i] , theta[0] , theta[1] )
         a_deriv += err
-        b_deriv += err*X[i]
+        b_deriv += err*X[0][i]
 
     theta[0] = theta[0] - normalization*a_deriv
     theta[1] = theta[1] - normalization*b_deriv
@@ -74,7 +74,7 @@ def main (progressCallback , endCallback):
     while True:
 
 
-        theta = gradient_descent(yearDf , priceDf , theta  , alpha)
+        theta = gradient_descent([yearDf] , priceDf , theta  , alpha)
         iterations += 1
 
         new_J = cost(yearDf , priceDf , theta[0] , theta[1])
