@@ -27,28 +27,28 @@ priceDf = normalizeDataframeColumn(df["price"])
 
 a0 = 0.5
 b0 = 1
-alpha = 0.01
+alpha = 0.1
 max_iterations = 2000
 
-def point_error (X , y , a , b):
-    return (a*X[0] +b*X[1]) - y
+def point_error (X , y , theta):
+    return sum(X * theta) - y
 
-def cost (X , Y , a , b):
+def cost (X , Y , theta):
 
     cost = 0
     for i in range(len(X)):
-        cost = point_error(X[i][:] , Y[i] , a , b)**2 
+        cost = point_error(X[i] , Y[i] , theta)**2 
     return cost
 
 
 def gradient_descent(X , Y , theta , alpha):
 
-    deriv = [0 , 0]
+    examples , features = np.shape(X)
+    deriv = np.zeros(features)
 
-    examples = len(X)
     normalization = alpha/float(examples)
     for i in range(examples):
-        err = point_error(X[i] , Y[i] , theta[0] , theta[1] )
+        err = point_error(X[i] , Y[i] , theta )
         deriv += np.multiply(X[i] , err)
 
     theta = theta - np.multiply(deriv , normalization)
@@ -76,7 +76,7 @@ def main (progressCallback , endCallback):
         theta = gradient_descent(X , priceDf , theta  , alpha)
         iterations += 1
 
-        new_J = cost(X , priceDf , theta[0] , theta[1])
+        new_J = cost(X , priceDf , theta)
 
         if np.isclose(abs(last_J  - new_J), 0 , atol=1e-03) or iterations == max_iterations:
             break
