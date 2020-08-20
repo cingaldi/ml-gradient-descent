@@ -30,14 +30,14 @@ b0 = 1
 alpha = 0.01
 max_iterations = 2000
 
-def point_error (x , y , a , b):
-    return (a +b*x) - y
+def point_error (X , y , a , b):
+    return (a*X[0] +b*X[1]) - y
 
 def cost (X , Y , a , b):
 
     cost = 0
     for i in range(len(X)):
-        cost = point_error(X[i] , Y[i] , a , b)**2 
+        cost = point_error(X[i][:] , Y[i] , a , b)**2 
     return cost
 
 
@@ -45,12 +45,12 @@ def gradient_descent(X , Y , theta , alpha):
     a_deriv = 0
     b_deriv = 0
 
-    examples = len(X[0])
+    examples = len(X)
     normalization = alpha/float(examples)
     for i in range(examples):
-        err = point_error(X[0][i] , Y[i] , theta[0] , theta[1] )
-        a_deriv += err
-        b_deriv += err*X[0][i]
+        err = point_error(X[i] , Y[i] , theta[0] , theta[1] )
+        a_deriv += err*X[i][0]
+        b_deriv += err*X[i][1]
 
     theta[0] = theta[0] - normalization*a_deriv
     theta[1] = theta[1] - normalization*b_deriv
@@ -71,13 +71,14 @@ def main (progressCallback , endCallback):
     theta = [a0 , b0]
     last_J = 0
     iterations = 0
+    X = np.transpose([np.ones(len(yearDf) , dtype=None) , yearDf])
     while True:
 
 
-        theta = gradient_descent([yearDf] , priceDf , theta  , alpha)
+        theta = gradient_descent(X , priceDf , theta  , alpha)
         iterations += 1
 
-        new_J = cost(yearDf , priceDf , theta[0] , theta[1])
+        new_J = cost(X , priceDf , theta[0] , theta[1])
 
         if np.isclose(abs(last_J  - new_J), 0 , atol=1e-03) or iterations == max_iterations:
             break
