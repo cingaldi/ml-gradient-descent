@@ -49,8 +49,7 @@ def gradient_descent(X , Y , theta , alpha):
     normalization = alpha/float(examples)
     for i in range(examples):
         err = point_error(X[i] , Y[i] , theta[0] , theta[1] )
-        deriv[0] += err*X[i][0]
-        deriv[1] += err*X[i][1]
+        deriv += np.multiply(X[i] , err)
 
     theta = theta - np.multiply(deriv , normalization)
 
