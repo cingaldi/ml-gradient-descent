@@ -42,18 +42,17 @@ def cost (X , Y , a , b):
 
 
 def gradient_descent(X , Y , theta , alpha):
-    a_deriv = 0
-    b_deriv = 0
+
+    deriv = [0 , 0]
 
     examples = len(X)
     normalization = alpha/float(examples)
     for i in range(examples):
         err = point_error(X[i] , Y[i] , theta[0] , theta[1] )
-        a_deriv += err*X[i][0]
-        b_deriv += err*X[i][1]
+        deriv[0] += err*X[i][0]
+        deriv[1] += err*X[i][1]
 
-    theta[0] = theta[0] - normalization*a_deriv
-    theta[1] = theta[1] - normalization*b_deriv
+    theta = theta - np.multiply(deriv , normalization)
 
     return theta
 
